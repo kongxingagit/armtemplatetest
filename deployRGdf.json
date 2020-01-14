@@ -6,7 +6,7 @@
 			"type": "string",
 			"defaultValue": "datacopytest",
 			"metadata": {
-				"description":  "Name the resource group where everything is contained"
+				"description": "Name the resource group where everything is contained"
 			}
 		},
 		"rgLocation": {
@@ -18,20 +18,21 @@
 				"centralus"
 			],
 			"metadata": {
-				"description":  "Choose the location of where to deploy. Possibly deprecated"
+				"description": "Choose the location of where to deploy. Possibly deprecated"
 			}
 		},
 		"idPrefix": {
 			"type": "string",
 			"maxLength": 9,
 			"metadata": {
-				"description":  "Added to the front of resource created, no more thn 9 characters"
+				"description": "Added to the front of resource created, no more thn 9 characters"
 			}
 		}
 	},
+
 	"variables": {
 		"storageprefix": "st",
-		"factoryprefix":  "df",
+		"factoryprefix": "df",
 		"storageName": "[concat(variables('storageprefix'), parameters('idPrefix'), uniqueString(subscription().id, parameters('rgName')))]",
 		"factoryName": "[concat(variables('factoryprefix'), parameters('idPrefix'), uniqueString(subscription().id, parameters('rgName')))]"
 	},
@@ -41,6 +42,12 @@
 			"apiVersion": "2018-05-01",
 			"location": "[parameters('rgLocation')]",
 			"name": "[parameters('rgName')]",
+			"tags": {
+				"Note": "Holy moly this is a subscription level resource tag",
+				"Environment": "lab",
+				"CreatorEmail": "franklin.chou@ferc.gov",
+				"DeleteSafe": "yes"
+			},
 			"properties": {}
 		},
 		{
