@@ -1,0 +1,75 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+	"contentVersion": "1.0.0.1",
+	"parameters": {
+		"rgName": {
+			"type": "string"
+		},
+		"rgLocation": {
+			"type": "string"
+		},
+		"storagePrefix": {
+			"type": "string",
+			"maxLength": 11
+		},
+		"factoryPrefix": {
+			"type": "string",
+			"maxLength": 11
+		}
+	},
+	"variables": {
+		"storageName": "[concat(parameters('storagePrefix'), uniqueString(subscription().id, parameters('rgName')))]",
+		"factoryName": "[concat(parameters('factoryPrefix'), uniqueString(subscription().id, parameters('rgName')))]"
+	},
+	"resources": [
+		{
+			"type": "Microsoft.Resources/resourceGroups",
+			"apiVersion": "2018-05-01",
+			"location": "[parameters('rgLocation')]",
+			"name": "[parameters('rgName')]",
+			"properties": {}
+		},
+		{
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-05-01",
+			"name": "storageDeployment",
+			"resourceGroup": "[parameters('rgName')]",
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/resourceGroups/', parameters('rgName'))]"
+			],
+			"properties": {
+				"mode": "Incremental",
+				"template": {
+					"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+					"contentVersion": "1.0.0.0",
+					"parameters": {},
+					"variables": {},
+					"resources": [
+						{
+							"type": "Microsoft.Storage/storageAccounts",
+							"apiVersion": "2017-10-01",
+							"name": "[variables('storageName')]",
+							"location": "[parameters('rgLocation')]",
+							"kind": "StorageV2",
+							"sku": {
+								"name": "Standard_LRS"
+							}
+						},
+						{
+							"apiVersion": "2018-06-01",
+							"name": "[variables('factoryName')]",
+							"location": "[parameters('rgLocation')]",
+							"type": "Microsoft.DataFactory/factories",
+							"identity": {
+								"type": "SystemAssigned"
+							},
+							"properties": {}
+						}
+					],
+					"outputs": {}
+				}
+			}
+		}
+	],
+	"outputs": {}
+}
