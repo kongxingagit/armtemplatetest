@@ -3,23 +3,37 @@
 	"contentVersion": "1.0.0.1",
 	"parameters": {
 		"rgName": {
-			"type": "string"
+			"type": "string",
+			"defaultValue": "datacopytest",
+			"metadata": {
+				"description":  "Name the resource group where everything is contained"
+			}
 		},
 		"rgLocation": {
-			"type": "string"
-		},
-		"storagePrefix": {
 			"type": "string",
-			"maxLength": 11
+			"defaultValue": "eastus",
+			"allowedValues": [
+				"eastus",
+				"eastus2",
+				"centralus"
+			],
+			"metadata": {
+				"description":  "Choose the location of where to deploy. Possibly deprecated"
+			}
 		},
-		"factoryPrefix": {
+		"idPrefix": {
 			"type": "string",
-			"maxLength": 11
+			"maxLength": 9,
+			"metadata": {
+				"description":  "Added to the front of resource created, no more thn 9 characters"
+			}
 		}
 	},
 	"variables": {
-		"storageName": "[concat(parameters('storagePrefix'), uniqueString(subscription().id, parameters('rgName')))]",
-		"factoryName": "[concat(parameters('factoryPrefix'), uniqueString(subscription().id, parameters('rgName')))]"
+		"storageprefix": "st",
+		"factoryprefix":  "df",
+		"storageName": "[concat(variables('storageprefix'), parameters('idPrefix'), uniqueString(subscription().id, parameters('rgName')))]",
+		"factoryName": "[concat(variables('factoryprefix'), parameters('idPrefix'), uniqueString(subscription().id, parameters('rgName')))]"
 	},
 	"resources": [
 		{
