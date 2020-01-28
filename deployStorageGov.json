@@ -1,0 +1,105 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.1",
+  "parameters": {
+    "rgName": {
+      "type": "string",
+      "defaultValue": "armTemplates",
+      "metadata": {
+        "description": "Name the resource group where everything is contained"
+      }
+    },
+    "rgLocation": {
+      "type": "string",
+      "defaultValue": "usgovvirginia",
+      "allowedValues": [
+        "usgovvirginia",
+        "usgoviowa",
+        "usgovtexas"
+      ],
+      "metadata": {
+        "description": "Choose the location of where to deploy. Possibly deprecated"
+      }
+    },
+    "idPrefix": {
+      "type": "string",
+      "maxLength": 9,
+      "metadata": {
+        "description": "Added to the front of resource created, no more thn 9 characters"
+      }
+    }
+  },
+
+  "variables": {
+    "storageprefix": "st",
+    "containerprefix": "co",
+    "storageName": "[concat(variables('storageprefix'), parameters('idPrefix'), uniqueString(subscription().id, parameters('rgName')))]",
+    "containerName": "[concat(variables('containerprefix'), parameters('idPrefix'), uniqueString(subscription().id, parameters('rgName')))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/resourceGroups",
+      "apiVersion": "2018-05-01",
+      "location": "[parameters('rgLocation')]",
+      "name": "[parameters('rgName')]",
+      "tags": {
+        "owner-email": "franklin.chou@ferc.gov",
+        "cost-group": "oed-dgd",
+        "project": "general-development-tools",
+        "Environment": "dev",
+        "lifecycle": "persistent",
+        "CreatorEmail": "franklin.chou@ferc.gov",
+        "DeleteSafe": "yes"
+      },
+      "properties": {}
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2018-05-01",
+      "name": "storageDeployment",
+      "resourceGroup": "[parameters('rgName')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/resourceGroups/', parameters('rgName'))]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "parameters": {},
+          "variables": {},
+          "resources": [
+            {
+              "type": "Microsoft.Storage/storageAccounts",
+              "apiVersion": "2018-07-01",
+              "name": "[variables('storageName')]",
+              "location": "[parameters('rgLocation')]",
+              "kind": "StorageV2",
+              "sku": {
+                "name": "Standard_LRS"
+              },
+              "tags": {
+                "role": "arm-template-repo"
+              },
+              "properties": {
+                "accessTier": "Hot"
+              },
+              "resources": [
+                {
+                  "name": "[concat('default/', parameters('containerName'))]",
+                  "type": "blobServices/containers",
+                  "apiVersion": "2018-07-01",
+                  "dependsOn": [
+                    "[parameters('storageAccountName')]"
+                  ]
+                }
+              ]
+            }
+          ],
+          "outputs": {}
+        }
+      }
+    }
+  ],
+  "outputs": {}
+}

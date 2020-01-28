@@ -61,6 +61,13 @@ az account set --subscription Muh-Subscription-ID
 ```
 
 
+More deployment examples
+
+az deployment validate --location usgovvirginia --template-file C:\Users\fncoe73\Source\Repos\SubscriptionDeployments\deployStorageGov.json --parameters @C:\Users\fncoe73\Source\Repos\SubscriptionDeployments\deployStorageGov.parameters.json
+
+az deployment create --location usgovvirginia --template-file C:\Users\fncoe73\Source\Repos\SubscriptionDeployments\deployStorageGov.json --parameters @C:\Users\fncoe73\Source\Repos\SubscriptionDeployments\deployStorageGov.parameters.json
+
+
 
 More tips here 
 
