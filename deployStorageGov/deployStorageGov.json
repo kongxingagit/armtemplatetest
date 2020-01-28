@@ -90,7 +90,7 @@
                   "type": "blobServices/containers",
                   "apiVersion": "2018-07-01",
                   "dependsOn": [
-                    "[parameters('storageAccountName')]"
+                    "[variables('storageName')]"
                   ]
                 }
               ]
