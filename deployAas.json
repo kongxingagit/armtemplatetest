@@ -73,11 +73,11 @@
 			"properties": {
 				"ipV4FirewallSettings": "[parameters('firewallSettings')]",
 				"backupBlobContainerUri": "[parameters('backupBlobContainerUri')]"
+			},
+			"tags": {
+				"role": "data-mart and models"
 			}
-		},
-		"tags",
-		{
-			"role": "arm-template-repo"
 		}
+
 	]
 }

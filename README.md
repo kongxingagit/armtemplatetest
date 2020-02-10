@@ -68,6 +68,12 @@ az deployment validate --location usgovvirginia --template-file C:\Users\fncoe73
 az deployment create --location usgovvirginia --template-file C:\Users\fncoe73\Source\Repos\SubscriptionDeployments\deployStorageGov.json --parameters @C:\Users\fncoe73\Source\Repos\SubscriptionDeployments\deployStorageGov.parameters.json
 
 
+One more deployment example
+
+```
+az group deployment create --resource-group reporting-proto --template-uri https://stdevtoolsnz4k5zmfcv5eu.blob.core.usgovcloudapi.net/codevtoolsnz4k5zmfcv5eu/deployAas.json --parameters https://stdev.blob.core.usgovcloudapi.net/z4k5zmfdfgfcv5eu/deployAas.parameters.json
+```
+
 
 More tips here 
 
